@@ -17,12 +17,26 @@ export default function CarBookings() {
   }, []);
 
   const loadBookings = () => {
-    getBookingsByCarId(id).then(data => setBookings(data.map(b => ({
-      key: b.id,
-      id: b.id,
-      user: b.driver,
-      date: `${b.startDate} ${b.startTime} - ${b.endTime}`,
-    }))));
+    getBookingsByCarId(id).then(data => setBookings(data.map(b => {
+      const newDate = new Date(b.startDatetime);
+      return {
+        key: b.id,
+        id: b.id,
+        user: b.driver,
+        date: `${newDate.getDate()}.${newDate.getMonth() + 1}, ${mapWeekDays[newDate.getDay()]}`,
+        timeslot: ` ${b.startTime.split(':').slice(0, 2).join(':')} - ${b.endTime.split(':').slice(0, 2).join(':')}`
+      }
+    })));
+  };
+
+  const mapWeekDays = {
+    1: 'Mon',
+    2: 'Tues',
+    3: 'Wed',
+    4: 'Thurs',
+    5: 'Fri',
+    6: 'Sat',
+    7: 'Sun',
   };
 
   const deleteBooking = (bookingId) => {
@@ -33,7 +47,8 @@ export default function CarBookings() {
     <>
       {bookings && <Table dataSource={bookings}>
         <Column title="Driver" dataIndex="user" key="user" />
-        <Column title="Timeslot" dataIndex="date" key="date" />
+        <Column title="Date" dataIndex="date" key="date" />
+        <Column title="Timeslot" dataIndex="timeslot" key="timeslot" />
         <Column
           key="action"
           render={

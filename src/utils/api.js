@@ -69,6 +69,18 @@ const getBookingsByCarId = (id) => {
         .then(response => response.json());
 };
 
+const createBooking = async (carId, body) => {
+    const response = await fetch(`${basicUrl}/cars/book/create/${carId}`, {
+        method: "POST",
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    });
+    return await response.json();
+};
+
 const removeBooking = async (id) => {
     const response = await fetch(`${basicUrl}/cars/book/remove/${id}`, {
         method: "POST",
@@ -78,4 +90,4 @@ const removeBooking = async (id) => {
     return await response.json();
 };
 
-export { getCars, getCarById, startNewRide, finishRide, getCardStatus, takeCard, returnCard, getBookingsByCarId, removeBooking };
+export { getCars, getCarById, startNewRide, finishRide, getCardStatus, takeCard, returnCard, getBookingsByCarId, createBooking, removeBooking };
